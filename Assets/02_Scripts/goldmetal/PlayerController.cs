@@ -35,6 +35,7 @@ public class PlayerController : MonoBehaviour
         {
             animator.SetBool("ANI_RUN", true);
         }
+        //Debug.Log("ANI_RUN = " + animator.GetCurrentAnimatorStateInfo(0).IsName("ANI_RUN"));
 
         // - 정지
         if (Input.GetButtonUp("Horizontal") == true)
@@ -51,18 +52,21 @@ public class PlayerController : MonoBehaviour
             animator.SetBool("ANI_JUMP", true);
             animator.SetBool("ANI_RUN", false);
         }
+        //Debug.Log("ANI_JUMP = " + animator.GetCurrentAnimatorStateInfo(0).IsName("ANI_JUMP"));
 
         // 착지 체크
         // - raycast가 점프를 시작할때 벌써 floor를 인지하므로 y force 값이 없을때만 체크
         //Debug.Log("rigidbody2D.linearVelocityY = " + rigidbody2D.linearVelocityY);        
         if (rigidbody2D.linearVelocityY <= 0)
         {
-            //Debug.DrawRay(rigidbody2D.position, Vector3.down, Color.green);
+            Debug.DrawRay(rigidbody2D.position, Vector3.down, Color.green);
             RaycastHit2D raycastHit2D = Physics2D.Raycast(rigidbody2D.position, Vector2.down, 1, LayerMask.GetMask("Floor"));
+            // layer=floor랑 충돌했을때
             if (raycastHit2D.collider != null)
             {
                 //Debug.Log("raycastHit2D.distance = " + raycastHit2D.distance);
-                if (raycastHit2D.distance <= 1f)
+                //if (raycastHit2D.distance <= 0.5f)
+                if (animator.GetBool("ANI_JUMP") == true)
                 {
                     //Debug.Log("raycastHit2D = " + raycastHit2D.collider.name);
                     animator.SetBool("ANI_JUMP", false);
@@ -70,6 +74,8 @@ public class PlayerController : MonoBehaviour
                 }
             }
         }
+        //Debug.Log("ANI_RUN = " + animator.GetCurrentAnimatorStateInfo(0).IsName("ANI_RUN"));
+        //Debug.Log("ANI_JUMP = " + animator.GetCurrentAnimatorStateInfo(0).IsName("ANI_JUMP"));
 
         // 속도제한
         if (rigidbody2D.linearVelocityX >= maxSpeed || rigidbody2D.linearVelocityX <= -maxSpeed)
@@ -108,9 +114,6 @@ public class PlayerController : MonoBehaviour
             // 왼쪽
             spriteRenderer.flipX = true;
         }
-
-
-        
     }
 
     // Update is called once per frame
